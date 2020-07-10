@@ -1,0 +1,28 @@
+<Video>:
+    fullscrenn: True
+    # canvas:
+    #     Rectangle:
+    #         source: "cover.jpg"
+    #         size: self.size
+    #         pos: self.pos
+    BoxLayout:
+        orientation: 'horizontal'
+        size: root.size
+        FloatLayout:
+            size_hint: 0.8, 1
+            orientation:'vertical'
+            Image:
+                allow_stretch: True
+                keep_ratio: False
+                pos_hint:{'top': 1}
+                size_hint:1,1
+                source: "cover.jpg"
+            Button:
+                background_color: 1,1,0,0.5
+                pos_hint:{'top': 0.2}
+                size_hint:1,0.2
+                text:"SINA"
+
+        Button:
+            size_hint: 0.2, 1
+            text:"SINA"
