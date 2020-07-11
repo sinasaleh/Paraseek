@@ -15,6 +15,7 @@ from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 import cv2
+import numpy as np
 import datetime
 
 
@@ -32,17 +33,22 @@ class Video(Widget):
     frameRate =  NumericProperty(30)
 
     lastImageDir = StringProperty("capturedImages/cover.jpg")
+    def __init__(self, *args, **kwargs):
+        super(Video, self).__init__(*args, **kwargs)
+        brightnessSlider = self.ids['brightnessSlider']
+        brightnessSlider.fbind('value', self.onBrightnessChange)
+        contrastSlider = self.ids['contrastSlider']
+        # brightnessSlider.fbind('value', self.onBrightnessChange)
+
     def update(self, dt):
         img1 = self.ids['videoFrame']
         # display image from cam in opencv window
         ret, frame = self.capture1.read()
-        # cv2.imshow("CV2 Image", frame)
-        # convert it to texture
-        # contrast = 1
-        # brightness = 0
-        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        # frame[:,:,2] = np.clip(contrast * frame[:,:,2] + brightness, 0, 255)
-        # frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
+        contrast = 1
+        brightness = 0
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        frame[:,:,2] = np.clip(contrast * frame[:,:,2] + self.brightness, 0, 255)
+        frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tostring()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -70,6 +76,9 @@ class Video(Widget):
     def displayLastImage(self):
         image = cv2.imread(self.lastImageDir)
         cv2.imshow('lastCapturedImage', image)
+
+    def onBrightnessChange(self, instance, value):
+        self.brightness = value - 50
 
 class ExampleApp(App):
     def build(self):
