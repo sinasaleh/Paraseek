@@ -4,16 +4,23 @@ from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
+from kivy.uix.behaviors import ButtonBehavior
+
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from kivy.properties import (
-    NumericProperty, ReferenceListProperty, ObjectProperty
+    NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty
 )
 from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 import cv2
 import datetime
+
+
+class ImageButton(ButtonBehavior, Image):
+    pass
+
 class Video(Widget):
     # To be used for the first camera
     capture1 = ObjectProperty(None)
@@ -22,7 +29,9 @@ class Video(Widget):
 
     brightness = NumericProperty(0)
     contrast = NumericProperty(1)
-    frameRate =  NumericProperty(20)
+    frameRate =  NumericProperty(30)
+
+    lastImageDir = StringProperty("capturedImages/cover.jpg")
     def update(self, dt):
         img1 = self.ids['videoFrame']
         # display image from cam in opencv window
@@ -54,8 +63,13 @@ class Video(Widget):
 
         # Save the captured image
         date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
-        print(date)
-        cv2.imwrite("capturedImages/" + date + ".jpg", frame)
+        dir = "capturedImages/" + date + ".jpg"
+        cv2.imwrite(dir, frame)
+        self.lastImageDir = dir
+
+    def displayLastImage(self):
+        image = cv2.imread(self.lastImageDir)
+        cv2.imshow('lastCapturedImage', image)
 
 class ExampleApp(App):
     def build(self):
@@ -64,7 +78,7 @@ class ExampleApp(App):
         # vid.capture2 = cv2.VideoCapture(1)
         vid.capture1.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         vid.capture1.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-        Clock.schedule_interval(vid.update, 1.0/20.0)
+        Clock.schedule_interval(vid.update, 1.0/30.0)
         return vid
 
 if __name__ == '__main__':
