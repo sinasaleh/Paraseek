@@ -1,0 +1,8 @@
+Bottom-panel: rgb(51,51,51);
+side-panel:   rgb(229,229,229);
+background:   rgb(64,64,64);
+laset-image-border: rgb(235,235,235);
+slider-circle: rgb(137,137,137);
+slider-base: rgb(85,85,85);
+slider dot: rgb(37,37,37);
+stream-border: rgb(235,235,235);
