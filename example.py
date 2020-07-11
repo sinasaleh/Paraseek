@@ -10,6 +10,8 @@ from kivy.graphics.texture import Texture
 from kivy.properties import (
     NumericProperty, ReferenceListProperty, ObjectProperty
 )
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 import cv2
 

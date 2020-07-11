@@ -15,14 +15,42 @@
                 allow_stretch: True
                 keep_ratio: False
                 pos_hint:{'top': 1}
-                size_hint:1,1
+                size_hint:1,0.88
                 source: "cover.jpg"
-            Button:
-                background_color: 1,1,0,0.5
-                pos_hint:{'top': 0.2}
-                size_hint:1,0.2
-                text:"SINA"
-
-        Button:
+            FloatLayout:
+                pos_hint:{'top': 0.12}
+                size_hint:1,0.12
+                canvas.before:
+                    Color:
+                        rgba: 0.25, 0.25, 0.25, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Image:
+                    pos_hint:{'x': -0.02, 'y':0.1}
+                    size_hint:0.2,0.8
+                    source: "cover.jpg"
+                Image:
+                    pos_hint:{'center_x': 0.44, 'center_y': 0.5}
+                    size_hint:0.2,0.4
+                    source: "Record.png"
+                Image:
+                    pos_hint:{'center_x': 0.5, 'center_y': 0.5}
+                    size_hint:0.2,0.5
+                    source: "Capture.png"
+                Image:
+                    pos_hint:{'center_x': 0.56, 'center_y': 0.5}
+                    size_hint:0.2,0.4
+                    source: "overlay.png"
+                Image:
+                    pos_hint:{'center_x': 0.95, 'center_y': 0.5}
+                    size_hint:0.2,0.35
+                    source: "Camera Swap.png"
+        FloatLayout:
             size_hint: 0.2, 1
-            text:"SINA"
+            canvas.before:
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
