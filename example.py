@@ -61,6 +61,7 @@ class Video(Widget):
         img1.texture = texture1
 
     def captureImage(self):
+        print('capture image')
         lastImage = self.ids['lastCapturedImage']
         ret, frame = self.capture1.read()
         buf1 = cv2.flip(frame, 0)
@@ -86,6 +87,9 @@ class Video(Widget):
     def displayLastImage(self):
         image = cv2.imread(self.lastImageDir)
         cv2.imshow('Last Captured Image', image)
+
+    def recordStream(self):
+        print('record stream')
 
     def onBrightnessChange(self, instance, value):
         self.brightness = value - 50

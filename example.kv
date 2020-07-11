@@ -52,18 +52,25 @@
                 ImageButton:
                     on_release: root.displayLastImage()
                     id: lastCapturedImage
-                    pos_hint:{'x': -0.02, 'y':0.1}
-                    size_hint:0.2,0.8
+                    pos_hint:{'x': 0.01, 'y':0.1}
+                    size_hint: 0.15, 0.8
                     source: "assets/images/cover.jpg"
-                Image:
+                    allow_stretch: True
+                    keep_ratio: False
+                ImageButton:
+                    on_release: root.recordStream()
                     pos_hint:{'center_x': 0.44, 'center_y': 0.5}
-                    size_hint:0.2,0.4
+                    size_hint:0.044,0.45
                     source: "assets/images/record.png"
+                    allow_stretch: True
+                    keep_ratio: False
                 ImageButton:
                     on_release: root.captureImage()
                     pos_hint:{'center_x': 0.5, 'center_y': 0.5}
-                    size_hint:0.2,0.5
+                    size_hint:0.059,0.67
                     source: "assets/images/capture.png"
+                    allow_stretch: True
+                    keep_ratio: False
                 Image:
                     pos_hint:{'center_x': 0.56, 'center_y': 0.5}
                     size_hint:0.2,0.4
