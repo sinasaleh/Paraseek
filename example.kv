@@ -28,11 +28,6 @@
 
 <Video>:
     fullscrenn: True
-    # canvas:
-    #     Rectangle:
-    #         source: "cover.jpg"
-    #         size: self.size
-    #         pos: self.pos
     BoxLayout:
         orientation: 'horizontal'
         size: root.size
@@ -45,7 +40,6 @@
                 keep_ratio: False
                 pos_hint:{'top': 1}
                 size_hint:1,0.88
-                # source: "assets/images/cover.jpg"
             FloatLayout:
                 pos_hint:{'top': 0.12}
                 size_hint:1,0.12
@@ -56,6 +50,7 @@
                         pos: self.pos
                         size: self.size
                 Image:
+                    id: lastCapturedImage
                     pos_hint:{'x': -0.02, 'y':0.1}
                     size_hint:0.2,0.8
                     source: "assets/images/cover.jpg"
@@ -64,6 +59,7 @@
                     size_hint:0.2,0.4
                     source: "assets/images/record.png"
                 Image:
+                    on_touch_up: root.captureImage()
                     pos_hint:{'center_x': 0.5, 'center_y': 0.5}
                     size_hint:0.2,0.5
                     source: "assets/images/capture.png"
