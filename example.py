@@ -17,6 +17,7 @@ Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 import cv2
 import numpy as np
 import datetime
+import os
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -25,60 +26,72 @@ class ImageButton(ButtonBehavior, Image):
 class Video(Widget):
     # To be used for the first camera
     capture1 = ObjectProperty(None)
+
     # To be used for the second camera
-    capture2 = ObjectProperty(None)
+    # capture2 = ObjectProperty(None)
 
     brightness = NumericProperty(0)
-    contrast = NumericProperty(1)
+    contrast = NumericProperty(1.0)
     frameRate =  NumericProperty(30)
 
-    lastImageDir = StringProperty("capturedImages/cover.jpg")
+    saveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
+    lastImageDir = os.path.join(saveFolder, "cover.jpg")
+
     def __init__(self, *args, **kwargs):
         super(Video, self).__init__(*args, **kwargs)
         brightnessSlider = self.ids['brightnessSlider']
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
-        # brightnessSlider.fbind('value', self.onBrightnessChange)
+        contrastSlider.fbind('value', self.onContrastChange)
 
     def update(self, dt):
         img1 = self.ids['videoFrame']
+
         # display image from cam in opencv window
         ret, frame = self.capture1.read()
-        contrast = 1
-        brightness = 0
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        frame[:,:,2] = np.clip(contrast * frame[:,:,2] + self.brightness, 0, 255)
+        frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
         buf1 = cv2.flip(frame, 0)
-        buf = buf1.tostring()
+        buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+        
         # display image from the texture
         img1.texture = texture1
 
     def captureImage(self):
-        print("HERE")
         lastImage = self.ids['lastCapturedImage']
         ret, frame = self.capture1.read()
         buf1 = cv2.flip(frame, 0)
-        buf = buf1.tostring()
+        buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+        
         # display image from the texture
         lastImage.texture = texture1
 
         # Save the captured image
         date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
-        dir = "capturedImages/" + date + ".jpg"
-        cv2.imwrite(dir, frame)
+
+        # need to get current pathfrom OS to avoid issues with imwrite (note directory is found relative to scripts directory)
+        dir = os.path.join(self.saveFolder, date + ".jpg")
+
+        # cv2.imwrite fails silently if path is incorrect
+        if not cv2.imwrite(dir, frame):
+            raise Exception("Could not write image")
+
         self.lastImageDir = dir
 
     def displayLastImage(self):
         image = cv2.imread(self.lastImageDir)
-        cv2.imshow('lastCapturedImage', image)
+        cv2.imshow('Last Captured Image', image)
 
     def onBrightnessChange(self, instance, value):
         self.brightness = value - 50
+
+    def onContrastChange(self, instance, value):
+        self.contrast = value/50.0 if value > 0 else 0.05
 
 class ExampleApp(App):
     def build(self):
