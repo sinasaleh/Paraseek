@@ -41,7 +41,7 @@ class ExampleApp(App):
         vid = Video()
         vid.capture1 = cv2.VideoCapture(0)
         # vid.capture2 = cv2.VideoCapture(1)
-        Clock.schedule_interval(vid.update, 1.0/20.0)
+        # Clock.schedule_interval(vid.update, 1.0/20.0)
         return vid
 
 if __name__ == '__main__':

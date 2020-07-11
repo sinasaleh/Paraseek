@@ -1,3 +1,31 @@
+<CustomSlider@Slider>:
+    canvas:
+        Color:
+            rgb: 0.2, 0.2, 0.2
+        BorderImage:
+            border: self.border_horizontal if self.orientation == 'horizontal' else self.border_vertical
+            pos: (self.x + self.padding, self.center_y - self.background_width / 2) if self.orientation == 'horizontal' else (self.center_x - self.background_width / 2, self.y + self.padding)
+            size: (self.width - self.padding * 2, self.background_width) if self.orientation == 'horizontal' else (self.background_width, self.height - self.padding * 2)
+            source: (self.background_disabled_horizontal if self.orientation == 'horizontal' else self.background_disabled_vertical) if self.disabled else (self.background_horizontal if self.orientation == 'horizontal' else self.background_vertical)
+        Color:
+            rgba: root.value_track_color if self.value_track and self.orientation == 'horizontal' else [1, 1, 1, 0]
+        Line:
+            width: self.value_track_width
+            points: self.x + self.padding, self.center_y, self.value_pos[0], self.center_y
+        Color:
+            rgba: root.value_track_color if self.value_track and self.orientation == 'vertical' else [1, 1, 1, 0]
+        Line:
+            width: self.value_track_width
+            points: self.center_x, self.y + self.padding, self.center_x, self.value_pos[1]
+        Color:
+            rgb: 1, 1, 1
+    Image:
+        pos: (root.value_pos[0] - root.cursor_width / 2, root.center_y - root.cursor_height / 2) if root.orientation == 'horizontal' else (root.center_x - root.cursor_width / 2, root.value_pos[1] - root.cursor_height / 2)
+        size: root.cursor_size
+        source: root.cursor_disabled_image if root.disabled else root.cursor_image
+        allow_stretch: True
+        keep_ratio: False
+
 <Video>:
     fullscrenn: True
     # canvas:
@@ -9,7 +37,7 @@
         orientation: 'horizontal'
         size: root.size
         FloatLayout:
-            size_hint: 0.8, 1
+            size_hint: 0.85, 1
             orientation:'vertical'
             Image:
                 id: videoFrame
@@ -48,10 +76,53 @@
                     size_hint:0.2,0.35
                     source: "assets/images/camera-swap.png"
         FloatLayout:
-            size_hint: 0.2, 1
+            orientation: 'vertical'
+            size_hint: 0.15, 1
             canvas.before:
                 Color:
                     rgba: 0.9, 0.9, 0.9, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, 0.25
+                pos_hint: {'center_x': 0.5, 'top': 0.37}
+                FloatLayout:
+                    size_hint: 0.5, 1
+                    orientation: 'vertical'
+                    CustomSlider:
+                        id: contrastSlider
+                        pos_hint:{'center_x': 0.5, 'center_y': 0.6}
+                        size_hint:1,0.8
+                        min: 0
+                        max: 100
+                        step: 5
+                        value: 50
+                        background_width: "24sp"
+                        cursor_image: "assets/images/slider.png"
+                        cursor_size: self.width/6, self.width/6
+                        orientation: 'vertical'
+                    Image:
+                        pos_hint:{'center_x': 0.5, 'center_y': 0.1}
+                        size_hint:1,0.14
+                        source: "assets/images/contrast.png"
+                FloatLayout:
+                    size_hint: 0.5, 1
+                    orientation: 'vertical'
+                    CustomSlider:
+                        pos_hint:{'center_x': 0.5, 'center_y': 0.6}
+                        size_hint:1,0.8
+                        id: brightnessSlider
+                        min: 0
+                        max: 100
+                        step: 5
+                        value: 50
+                        background_width: "24sp"
+                        cursor_image: "assets/images/slider.png"
+                        cursor_size: self.width/6, self.width/6
+                        orientation: 'vertical'
+                    Image:
+                        pos_hint:{'center_x': 0.5, 'center_y': 0.1}
+                        size_hint:1,0.2
+                        source: "assets/images/brightness.png"
