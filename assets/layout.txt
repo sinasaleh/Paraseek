@@ -1,0 +1,12 @@
+Full-Screen windows
+
+stream-canvas: width: 0.85 height: 0.9
+stream: centered aspect-ratio 4:3
+bottom-panel: width: 0.85 height: 0.1
+side-panel: width: 0.15 height:1
+
+
+Bottom-panel controls:(root)
+
+last-image: width : 0.125*root.width height: 0.8*root.height
+
