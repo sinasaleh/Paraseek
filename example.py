@@ -61,7 +61,9 @@ class ExampleApp(App):
     def build(self):
         vid = Video()
         vid.capture1 = cv2.VideoCapture(0)
-        vid.capture2 = cv2.VideoCapture(1)
+        # vid.capture2 = cv2.VideoCapture(1)
+        vid.capture1.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        vid.capture1.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         Clock.schedule_interval(vid.update, 1.0/20.0)
         return vid
 
