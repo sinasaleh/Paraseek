@@ -43,6 +43,7 @@ class Video(Widget):
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
+        
 
     def update(self, dt):
         img1 = self.ids['videoFrame']
@@ -56,7 +57,7 @@ class Video(Widget):
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-        
+
         # display image from the texture
         img1.texture = texture1
 
@@ -67,7 +68,7 @@ class Video(Widget):
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
         texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-        
+
         # display image from the texture
         lastImage.texture = texture1
 
@@ -99,7 +100,7 @@ class Video(Widget):
 
     def record(self):
         print('record stream')
-    
+
     def overlay(self):
         print('overlay')
 

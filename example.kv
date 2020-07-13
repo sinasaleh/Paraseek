@@ -1,7 +1,7 @@
 <CustomSlider@Slider>:
     canvas:
         Color:
-            rgb: 0.2, 0.2, 0.2
+            rgb: 0.2, 0.2, 0.2,
         BorderImage:
             border: self.border_horizontal if self.orientation == 'horizontal' else self.border_vertical
             pos: (self.x + self.padding, self.center_y - self.background_width / 2) if self.orientation == 'horizontal' else (self.center_x - self.background_width / 2, self.y + self.padding)
@@ -27,12 +27,18 @@
         keep_ratio: False
 
 <Video>:
-    fullscrenn: True
+    fullscreen: True
     BoxLayout:
         orientation: 'horizontal'
         size: root.size
         FloatLayout:
             size_hint: 0.85, 1
+            canvas.before:
+                Color:
+                    rgba: 0.25, 0.25, 0.25, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             orientation:'vertical'
             Image:
                 id: videoFrame
@@ -40,12 +46,34 @@
                 keep_ratio: True
                 pos_hint:{'top': 1}
                 size_hint:1,0.88
+            Image:
+                pos_hint:{'center_x': 0.95, 'center_y': 0.95}
+                size_hint:1,0.1
+                source: "assets/images/logo.png"
+                keep_ratio:True
+            CustomSlider:
+                id: zoomSlider
+                pos_hint:{'center_x': 0.03, 'center_y': 0.6}
+                size_hint:0.08,0.2
+                min: 0
+                max: 100
+                step: 5
+                value: 50
+                background_width: "24sp"
+                cursor_image: "assets/images/slider.png"
+                cursor_size: self.width/6, self.width/6
+                orientation: 'vertical'
+            Image:
+                pos_hint:{'center_x': 0.03, 'center_y': 0.49}
+                size_hint:1,0.14
+                source: "assets/images/zoom.png"
+                keep_ratio:True
             FloatLayout:
                 pos_hint:{'top': 0.12}
                 size_hint:1,0.12
                 canvas.before:
                     Color:
-                        rgba: 0.25, 0.25, 0.25, 0.5
+                        rgba: 0.2, 0.2, 0.2, 1
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -63,13 +91,13 @@
                     size_hint:0.044,0.45
                     source: "assets/images/record.png"
                     allow_stretch: True
-                    keep_ratio: False
+                    keep_ratio: True
                 ImageButton:
                     on_release: root.captureImage()
                     pos_hint:{'center_x': 0.5, 'center_y': 0.5}
                     size_hint:0.059,0.67
                     source: "assets/images/capture.png"
-                    allow_stretch: True
+                    allow_stretch: False
                     keep_ratio: False
                 ImageButton:
                     pos_hint:{'center_x': 0.56, 'center_y': 0.5}
@@ -80,7 +108,7 @@
                     keep_ratio: False
                 ImageButton:
                     pos_hint:{'center_x': 0.95, 'center_y': 0.5}
-                    size_hint:0.055,0.52
+                    size_hint:0.045,0.45
                     on_release: root.swapCamera()
                     source: "assets/images/camera-swap.png"
                     allow_stretch: True
@@ -94,6 +122,46 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+            ImageButton:
+                on_release: root.displayLastImage()
+                id: noise
+                pos_hint:{'x': 0.1, 'y':0.81}
+                size_hint: 0.30, 0.09
+                source: "assets/images/noise.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.displayLastImage()
+                id: border
+                pos_hint:{'x': 0.1, 'y':0.70}
+                size_hint: 0.30, 0.09
+                source: "assets/images/noise.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.displayLastImage()
+                id: cluster
+                pos_hint:{'x': 0.1, 'y':0.59}
+                size_hint: 0.30, 0.09
+                source: "assets/images/noise.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.displayLastImage()
+                id: threshold
+                pos_hint:{'x': 0.1, 'y':0.48}
+                size_hint: 0.30, 0.09
+                source: "assets/images/noise.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.displayLastImage()
+                id: invert
+                pos_hint:{'x': 0.1, 'y':0.37}
+                size_hint: 0.30, 0.09
+                source: "assets/images/noise.png"
+                allow_stretch: True
+                keep_ratio: False
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, 0.25

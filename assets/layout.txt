@@ -1,12 +1,39 @@
 Full-Screen windows
 
-stream-canvas: width: 0.85 height: 0.9
-stream: centered aspect-ratio 4:3
-bottom-panel: width: 0.85 height: 0.1
-side-panel: width: 0.15 height:1
+stream-canvas: width: 85% height: 88%
+bottom-panel:  width: 85% height: 12%
+side-panel:    width: 15% height: 100%
 
+Stream: 
 
-Bottom-panel controls:(root)
+	zoom:
+	     slider-height: 17.5%
 
-last-image: width : 0.125*root.width height: 0.8*root.height
+	icon: width:2.15% height:2.93%
 
+Bottom-panel controls:
+
+	last-image:
+	      width: 12% height: 9%
+	record:
+	      width: 12% height: 9%
+	capture:
+	      width: 12% height: 9%
+	overlay:
+	      width: 12% height: 9%
+	camera-swap:
+	      width: 3.3% height: 4.5%
+	
+
+Filter-icons: width: 7.5% height: 7.5%
+
+Side-panel:	
+
+	patinet name: height: 8%
+	each filter box:  height: 11% (total 55%)
+		Filter-icons: height = width = 7.5%
+
+	brightness/contrast:  height: 25%
+			slider-height: 17.5%
+	minimize/on:  height: 12%
+	
