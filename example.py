@@ -78,9 +78,15 @@ class Video(Widget):
     def applyFilters(self, frame):
 
         if self.noiseState == True:
-            pass
+            frame= cv2.fastNlMeansDenoisingColored(frame,None,10,10,7,21)
+            #this is too fucking slow
+            #needs improvement
         if self.borderState == True:
-            pass
+            frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            frameBW = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+            frameBW = cv2.cvtColor(frameBW, cv2.COLOR_GRAY2BGR)
+            frame = cv2.addWeighted(frameBW,0.5,frame,0.5,0)
         if self.clusterState == True:
             pass
         if self.thresholdState == True:
@@ -89,8 +95,8 @@ class Video(Widget):
             cv2.THRESH_BINARY,11,2)
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
         if self.invertState == True:
-            pass
-            
+             frame = cv2.bitwise_not(frame)
+
         return frame
 
     def captureImage(self):
