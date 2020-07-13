@@ -144,6 +144,12 @@
                 source: "assets/images/border.png"
                 allow_stretch: True
                 keep_ratio: False
+            Label:
+                text: "Border \nHighlight"
+                color: 0, 0, 0, 1
+                pos_hint:{'x': 0.43, 'y':0.70}
+                size_hint: 0.5, 0.09
+                font_size: self.width / 5
             ImageButton:
                 on_release: root.cluster()
                 id: cluster
@@ -152,6 +158,12 @@
                 source: "assets/images/cluster.png"
                 allow_stretch: True
                 keep_ratio: False
+            Label:
+                text: "Cluster"
+                color: 0, 0, 0, 1
+                pos_hint:{'x': 0.38, 'y':0.59}
+                size_hint: 0.5, 0.09
+                font_size: self.width / 5
             ImageButton:
                 on_release: root.threshold()
                 id: threshold
@@ -160,6 +172,12 @@
                 source: "assets/images/gaussian.png"
                 allow_stretch: True
                 keep_ratio: False
+            Label:
+                text: "Threshold"
+                color: 0, 0, 0, 1
+                pos_hint:{'x': 0.45, 'y':0.48}
+                size_hint: 0.5, 0.09
+                font_size: self.width / 5
             ImageButton:
                 on_release: root.invert()
                 id: invert
@@ -168,6 +186,13 @@
                 source: "assets/images/invert.png"
                 allow_stretch: True
                 keep_ratio: False
+            Label:
+                text: "Invert"
+                color: 0, 0, 0, 1
+                pos_hint:{'x': 0.36, 'y':0.37}
+                size_hint: 0.5, 0.09
+                halign: 'left'
+                font_size: self.width / 5
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, 0.25
