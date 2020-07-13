@@ -9,7 +9,7 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from kivy.properties import (
-    NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty
+    NumericProperty, ReferenceListProperty, ObjectProperty, StringProperty, BooleanProperty
 )
 from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
@@ -18,6 +18,7 @@ import cv2
 import numpy as np
 import datetime
 import os
+
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -34,6 +35,15 @@ class Video(Widget):
     contrast = NumericProperty(1.0)
     frameRate =  NumericProperty(30)
 
+    # filter states
+    #####################
+    noiseState = BooleanProperty(False)
+    borderState = BooleanProperty(False)
+    clusterState = BooleanProperty(False)
+    thresholdState = BooleanProperty(False)
+    invertState = BooleanProperty(False)
+    #####################
+
     saveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
     lastImageDir = os.path.join(saveFolder, "cover.jpg")
 
@@ -43,7 +53,7 @@ class Video(Widget):
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
-        
+
 
     def update(self, dt):
         img1 = self.ids['videoFrame']
@@ -53,6 +63,7 @@ class Video(Widget):
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
+
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -94,6 +105,42 @@ class Video(Widget):
     def onContrastChange(self, instance, value):
         self.contrast = value/50.0 if value > 0 else 0.05
 
+    def noiseReduction(self):
+        if self.noiseState == False:
+            self.ids['noise'].source = "assets/images/noise-active.png"
+            self.noiseState = True
+        else:
+            self.ids['noise'].source = "assets/images/noise.png"
+            self.noiseState = False
+
+    def borderHighlight(self):
+        if self.borderState == False:
+            self.ids['border'].source = "assets/images/border-active.png"
+            self.borderState = True
+        else:
+            self.ids['border'].source = "assets/images/border.png"
+            self.borderState = False
+    def cluster(self):
+        if self.clusterState == False:
+            self.ids['cluster'].source = "assets/images/cluster-active.png"
+            self.clusterState = True
+        else:
+            self.ids['cluster'].source = "assets/images/cluster.png"
+            self.clusterState = False
+    def threshold(self):
+        if self.thresholdState == False:
+            self.ids['threshold'].source = "assets/images/gaussian-active.png"
+            self.thresholdState = True
+        else:
+            self.ids['threshold'].source = "assets/images/gaussian.png"
+            self.thresholdState = False
+    def invert(self):
+        if self.invertState == False:
+            self.ids['invert'].source = "assets/images/invert-active.png"
+            self.invertState = True
+        else:
+            self.ids['invert'].source = "assets/images/invert.png"
+            self.invertState = False
 ###########################
 # Needs implementation
 ###########################

@@ -123,7 +123,7 @@
                     pos: self.pos
                     size: self.size
             ImageButton:
-                on_release: root.displayLastImage()
+                on_release: root.noiseReduction()
                 id: noise
                 pos_hint:{'x': 0.1, 'y':0.81}
                 size_hint: 0.30, 0.09
@@ -131,35 +131,35 @@
                 allow_stretch: True
                 keep_ratio: False
             ImageButton:
-                on_release: root.displayLastImage()
+                on_release: root.borderHighlight()
                 id: border
                 pos_hint:{'x': 0.1, 'y':0.70}
                 size_hint: 0.30, 0.09
-                source: "assets/images/noise.png"
+                source: "assets/images/border.png"
                 allow_stretch: True
                 keep_ratio: False
             ImageButton:
-                on_release: root.displayLastImage()
+                on_release: root.cluster()
                 id: cluster
                 pos_hint:{'x': 0.1, 'y':0.59}
                 size_hint: 0.30, 0.09
-                source: "assets/images/noise.png"
+                source: "assets/images/cluster.png"
                 allow_stretch: True
                 keep_ratio: False
             ImageButton:
-                on_release: root.displayLastImage()
+                on_release: root.threshold()
                 id: threshold
                 pos_hint:{'x': 0.1, 'y':0.48}
                 size_hint: 0.30, 0.09
-                source: "assets/images/noise.png"
+                source: "assets/images/gaussian.png"
                 allow_stretch: True
                 keep_ratio: False
             ImageButton:
-                on_release: root.displayLastImage()
+                on_release: root.invert()
                 id: invert
                 pos_hint:{'x': 0.1, 'y':0.37}
                 size_hint: 0.30, 0.09
-                source: "assets/images/noise.png"
+                source: "assets/images/invert.png"
                 allow_stretch: True
                 keep_ratio: False
             BoxLayout:
