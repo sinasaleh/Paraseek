@@ -64,6 +64,12 @@ class Video(Widget):
         frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
 
+        if self.thresholdState == True:
+            frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            frame = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
