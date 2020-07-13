@@ -130,6 +130,12 @@
                 source: "assets/images/noise.png"
                 allow_stretch: True
                 keep_ratio: False
+            Label:
+                text: "Noise \nReduction"
+                color: 0, 0, 0, 1
+                pos_hint:{'x': 0.45, 'y':0.81}
+                size_hint: 0.5, 0.09
+                font_size: self.width / 5
             ImageButton:
                 on_release: root.borderHighlight()
                 id: border
