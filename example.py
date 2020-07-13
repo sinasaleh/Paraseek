@@ -64,11 +64,8 @@ class Video(Widget):
         frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
 
-        if self.thresholdState == True:
-            frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            frame = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            cv2.THRESH_BINARY,11,2)
-            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        frame = self.applyFilters(frame)
+
 
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
@@ -77,6 +74,24 @@ class Video(Widget):
 
         # display image from the texture
         img1.texture = texture1
+
+    def applyFilters(self, frame):
+
+        if self.noiseState == True:
+            pass
+        if self.borderState == True:
+            pass
+        if self.clusterState == True:
+            pass
+        if self.thresholdState == True:
+            frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            frame = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
+            frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        if self.invertState == True:
+            pass
+            
+        return frame
 
     def captureImage(self):
         lastImage = self.ids['lastCapturedImage']
