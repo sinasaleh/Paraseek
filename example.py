@@ -19,9 +19,7 @@ import cv2
 import numpy as np
 import datetime
 import os
-
-
-
+import time
 class ImageButton(ButtonBehavior, Image):
     pass
 
@@ -29,12 +27,14 @@ class Video(Widget):
     # To be used for the first camera
     capture1 = ObjectProperty(None)
 
+    recording = BooleanProperty(False)
+    recorder = ObjectProperty(None)
     # To be used for the second camera
     # capture2 = ObjectProperty(None)
 
     brightness = NumericProperty(0)
     contrast = NumericProperty(1.0)
-    frameRate =  NumericProperty(30)
+    frameRate =  NumericProperty(8)
     zoom = NumericProperty(1);
 
     # filter states
@@ -65,14 +65,17 @@ class Video(Widget):
     def update(self, dt):
         img1 = self.ids['videoFrame']
 
+        # print(time.time())
         # display image from cam in opencv window
         ret, frame = self.capture1.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
 
+        # print(frame.shape[0], frame.shape[1])
         frame = self.applyFilters(frame)
-
+        if(self.recording == True):
+            self.recorder.write(frame)
 
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
@@ -202,6 +205,13 @@ class Video(Widget):
 ###########################
 
     def record(self):
+        if(self.recording == True):
+            self.recorder.release()
+            self.recording = False
+        else:
+            self.recording = True
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.recorder = cv2.VideoWriter('output.mp4',fourcc, self.frameRate, (1280,720))
         print('record stream')
 
     def overlay(self):
@@ -217,7 +227,8 @@ class ExampleApp(App):
         # vid.capture2 = cv2.VideoCapture(1)
         vid.capture1.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         vid.capture1.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-        Clock.schedule_interval(vid.update, 1.0/30.0)
+        # time1 = time.time()
+        Clock.schedule_interval(vid.update, 1.0/8.0)
         return vid
 
 if __name__ == '__main__':
