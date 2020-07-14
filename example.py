@@ -62,6 +62,8 @@ class Video(Widget):
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
+        contrastSlider = self.ids['zoomSlider']
+        contrastSlider.fbind('value', self.onZoomChange)
 
 
     def update(self, dt):
@@ -79,6 +81,9 @@ class Video(Widget):
         if(self.recording == True):
             self.recorder.write(frame)
 
+        if(self.zoom > 1):
+            frame = self.zoomFrame(frame)
+            
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -108,6 +113,17 @@ class Video(Widget):
              frame = cv2.bitwise_not(frame)
 
         return frame
+
+    def zoomFrame(self, frame):
+        shape = frame.shape
+        height = shape[0]
+        width = shape[1]
+        minX = int((self.zoom - 1)/(2*self.zoom) * width)
+        maxX = width - minX
+        minY = int((self.zoom - 1)/(2*self.zoom) * height)
+        maxY = height - minY
+        cropped = frame[minY:maxY, minX: maxX]
+        return cv2.resize(cropped, (width, height))
 
     def captureImage(self):
         lastImage = self.ids['lastCapturedImage']
@@ -142,6 +158,9 @@ class Video(Widget):
 
     def onContrastChange(self, instance, value):
         self.contrast = value/50.0 if value > 0 else 0.05
+
+    def onZoomChange(self, instance, value):
+        self.zoom = value
 
 # Updated button images when they're active
 
