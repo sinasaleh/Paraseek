@@ -20,6 +20,9 @@ import numpy as np
 import datetime
 import os
 import time
+
+frameRate = 8.0
+
 class ImageButton(ButtonBehavior, Image):
     pass
 
@@ -34,7 +37,6 @@ class Video(Widget):
 
     brightness = NumericProperty(0)
     contrast = NumericProperty(1.0)
-    frameRate =  NumericProperty(8)
     zoom = NumericProperty(1);
 
     # filter states
@@ -211,7 +213,9 @@ class Video(Widget):
         else:
             self.recording = True
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.recorder = cv2.VideoWriter('output.mp4',fourcc, self.frameRate, (1280,720))
+            date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
+
+            self.recorder = cv2.VideoWriter('recordedVideos/' + date + '.mp4',fourcc, frameRate, (1280,720))
         print('record stream')
 
     def overlay(self):
