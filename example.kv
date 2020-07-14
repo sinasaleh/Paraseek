@@ -122,6 +122,27 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+            Image:
+                pos_hint:{'x': 0.1, 'y':0.92}
+                size_hint: 0.85, 0.075
+                source: "assets/images/textboxbg.png"
+                allow_stretch: True
+                keep_ratio: False
+            Image:
+                pos_hint:{'x': 0.15, 'y':0.925}
+                size_hint: 0.2, 0.065
+                source: "assets/images/patient.png"
+                allow_stretch: True
+                keep_ratio: True
+            TextInput:
+                text: "Jane Doe"
+                multiline: False
+                pos_hint:{'x': 0.38, 'y':0.94}
+                size_hint: 0.55, 0.035
+                cursor_color: [0,0,0,1]
+                background_normal: "assets/images/textboxcolor.png"
+                background_active: "assets/images/textboxcolor.png"
+                font_size: self.width / 7
             ImageButton:
                 on_release: root.noiseReduction()
                 id: noise

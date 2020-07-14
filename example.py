@@ -13,6 +13,7 @@ from kivy.properties import (
 )
 from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+from kivy.uix.textinput import TextInput
 
 import cv2
 import numpy as np
@@ -189,12 +190,11 @@ class Video(Widget):
             self.fullscreenState = False
 
     def power(self):
-        print('power')
         if not self.powerState:
-            self.ids['power'].source = "assets/images/power.png"
+            self.ids['power'].source = "assets/images/power-active.png"
             self.powerState = True
         else:
-            self.ids['power'].powerState = "assets/images/power-active.png"
+            self.ids['power'].source = "assets/images/power.png"
             self.powerState = False
 
 ###########################
