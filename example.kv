@@ -128,6 +128,27 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+            Image:
+                pos_hint:{'x': 0.1, 'y':0.92}
+                size_hint: 0.85, 0.075
+                source: "assets/images/textboxbg.png"
+                allow_stretch: True
+                keep_ratio: False
+            Image:
+                pos_hint:{'x': 0.15, 'y':0.925}
+                size_hint: 0.2, 0.065
+                source: "assets/images/patient.png"
+                allow_stretch: True
+                keep_ratio: True
+            TextInput:
+                text: "Jane Doe"
+                multiline: False
+                pos_hint:{'x': 0.38, 'y':0.94}
+                size_hint: 0.55, 0.035
+                cursor_color: [0,0,0,1]
+                background_normal: "assets/images/textboxcolor.png"
+                background_active: "assets/images/textboxcolor.png"
+                font_size: self.width / 7
             ImageButton:
                 on_release: root.noiseReduction()
                 id: noise
@@ -199,6 +220,22 @@
                 size_hint: 0.5, 0.09
                 halign: 'left'
                 font_size: self.width / 5
+            ImageButton:
+                on_release: root.fullscreenStream()
+                id: arrow
+                pos_hint:{'x': 0.17, 'y':0.035}
+                size_hint: 0.17, 0.05
+                source: "assets/images/fullscreen.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.power()
+                id: power
+                pos_hint:{'x': 0.67, 'y':0.035}
+                size_hint: 0.17, 0.05
+                source: "assets/images/power.png"
+                allow_stretch: True
+                keep_ratio: False
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, 0.25
@@ -241,23 +278,4 @@
                         pos_hint:{'center_x': 0.5, 'center_y': 0.1}
                         size_hint:1,0.24
                         source: "assets/images/brightness.png"
-            BoxLayout:
-                orientation: 'horizontal'
-                size_hint: 1, 0.12
-                pos_hint: {'center_x': 0.5, 'top': 0.12}
-                FloatLayout:
-                    size_hint: 0.5, 1
-                    orientation: 'vertical'
-                    Image:
-                        pos_hint:{'center_x': 0.5, 'center_y': 0.5}
-                        size_hint:0.4,0.4
-                        source: "assets/images/arrow.png"
-                        keep_ratio: True
-                FloatLayout:
-                    size_hint: 0.5, 1
-                    orientation: 'vertical'
-                    Image:
-                        pos_hint:{'center_x': 0.5, 'center_y': 0.5}
-                        size_hint:0.4,0.4
-                        source: "assets/images/power.png"
-                        keep_ratio: True
+            

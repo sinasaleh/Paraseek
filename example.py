@@ -13,6 +13,7 @@ from kivy.properties import (
 )
 from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+from kivy.uix.textinput import TextInput
 
 import cv2
 import numpy as np
@@ -45,6 +46,11 @@ class Video(Widget):
     invertState = BooleanProperty(False)
     #####################
 
+    # full screen video state (on_release is fullscreenStream, needs implementation)
+    fullscreenState = BooleanProperty(False)
+    # power buttons states (on_release is power, needs implementation)
+    powerState = BooleanProperty(False)
+
     saveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
     lastImageDir = os.path.join(saveFolder, "cover.jpg")
 
@@ -54,8 +60,6 @@ class Video(Widget):
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
-        zoomSlider = self.ids['zoomSlider']
-        zoomSlider.fbind('value', self.onZoomChange)
 
 
     def update(self, dt):
@@ -134,11 +138,10 @@ class Video(Widget):
     def onContrastChange(self, instance, value):
         self.contrast = value/50.0 if value > 0 else 0.05
 
-    def onZoomChange(self, instance, value):
-        pass
+# Updated button images when they're active
 
     def noiseReduction(self):
-        if self.noiseState == False:
+        if not self.noiseState:
             self.ids['noise'].source = "assets/images/noise-active.png"
             self.noiseState = True
         else:
@@ -146,33 +149,54 @@ class Video(Widget):
             self.noiseState = False
 
     def borderHighlight(self):
-        if self.borderState == False:
+        if not self.borderState:
             self.ids['border'].source = "assets/images/border-active.png"
             self.borderState = True
         else:
             self.ids['border'].source = "assets/images/border.png"
             self.borderState = False
+
     def cluster(self):
-        if self.clusterState == False:
+        if not self.clusterState:
             self.ids['cluster'].source = "assets/images/cluster-active.png"
             self.clusterState = True
         else:
             self.ids['cluster'].source = "assets/images/cluster.png"
             self.clusterState = False
+
     def threshold(self):
-        if self.thresholdState == False:
+        if not self.thresholdState:
             self.ids['threshold'].source = "assets/images/gaussian-active.png"
             self.thresholdState = True
         else:
             self.ids['threshold'].source = "assets/images/gaussian.png"
             self.thresholdState = False
+
     def invert(self):
-        if self.invertState == False:
+        if not self.invertState:
             self.ids['invert'].source = "assets/images/invert-active.png"
             self.invertState = True
         else:
             self.ids['invert'].source = "assets/images/invert.png"
             self.invertState = False
+
+    def fullscreenStream(self):
+        print('fullscreen')
+        if not self.fullscreenState:
+            self.ids['arrow'].source = "assets/images/smallscreen.png"
+            self.fullscreenState = True
+        else:
+            self.ids['arrow'].source = "assets/images/fullscreen.png"
+            self.fullscreenState = False
+
+    def power(self):
+        if not self.powerState:
+            self.ids['power'].source = "assets/images/power-active.png"
+            self.powerState = True
+        else:
+            self.ids['power'].source = "assets/images/power.png"
+            self.powerState = False
+
 ###########################
 # Needs implementation
 ###########################
