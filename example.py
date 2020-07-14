@@ -34,6 +34,7 @@ class Video(Widget):
     brightness = NumericProperty(0)
     contrast = NumericProperty(1.0)
     frameRate =  NumericProperty(30)
+    zoom = NumericProperty(1);
 
     # filter states
     #####################
@@ -53,6 +54,8 @@ class Video(Widget):
         brightnessSlider.fbind('value', self.onBrightnessChange)
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
+        zoomSlider = self.ids['zoomSlider']
+        zoomSlider.fbind('value', self.onZoomChange)
 
 
     def update(self, dt):
@@ -78,9 +81,7 @@ class Video(Widget):
     def applyFilters(self, frame):
 
         if self.noiseState == True:
-            frame= cv2.fastNlMeansDenoisingColored(frame,None,10,10,7,21)
-            #this is too fucking slow
-            #needs improvement
+            pass
         if self.borderState == True:
             frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             frameBW = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
@@ -102,6 +103,7 @@ class Video(Widget):
     def captureImage(self):
         lastImage = self.ids['lastCapturedImage']
         ret, frame = self.capture1.read()
+
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -131,6 +133,9 @@ class Video(Widget):
 
     def onContrastChange(self, instance, value):
         self.contrast = value/50.0 if value > 0 else 0.05
+
+    def onZoomChange(self, instance, value):
+        pass
 
     def noiseReduction(self):
         if self.noiseState == False:
