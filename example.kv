@@ -193,6 +193,22 @@
                 size_hint: 0.5, 0.09
                 halign: 'left'
                 font_size: self.width / 5
+            ImageButton:
+                on_release: root.fullscreenStream()
+                id: arrow
+                pos_hint:{'x': 0.17, 'y':0.035}
+                size_hint: 0.17, 0.05
+                source: "assets/images/fullscreen.png"
+                allow_stretch: True
+                keep_ratio: False
+            ImageButton:
+                on_release: root.power()
+                id: power
+                pos_hint:{'x': 0.67, 'y':0.035}
+                size_hint: 0.17, 0.05
+                source: "assets/images/power.png"
+                allow_stretch: True
+                keep_ratio: False
             BoxLayout:
                 orientation: 'horizontal'
                 size_hint: 1, 0.25
