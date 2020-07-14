@@ -143,12 +143,13 @@
             TextInput:
                 text: "Jane Doe"
                 multiline: False
-                pos_hint:{'x': 0.38, 'y':0.94}
-                size_hint: 0.55, 0.035
+                pos_hint:{'x': 0.38, 'y':0.9325}
+                size_hint: 0.55, 0.05
                 cursor_color: [0,0,0,1]
-                background_normal: "assets/images/textboxcolor.png"
-                background_active: "assets/images/textboxcolor.png"
+                background_normal: "assets/images/textboxbg.png"
+                background_active: "assets/images/textboxcolor-active.png"
                 font_size: self.width / 7
+                halign: 'auto'
             ImageButton:
                 on_release: root.noiseReduction()
                 id: noise
@@ -227,7 +228,7 @@
                 size_hint: 0.17, 0.05
                 source: "assets/images/fullscreen.png"
                 allow_stretch: True
-                keep_ratio: False
+                keep_ratio: True
             ImageButton:
                 on_release: root.power()
                 id: power
@@ -278,4 +279,3 @@
                         pos_hint:{'center_x': 0.5, 'center_y': 0.1}
                         size_hint:1,0.24
                         source: "assets/images/brightness.png"
-            
