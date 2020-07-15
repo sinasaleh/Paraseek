@@ -1,4 +1,3 @@
-__author__ = 'bunkus'
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
@@ -37,7 +36,7 @@ class Video(Widget):
 
     brightness = NumericProperty(0)
     contrast = NumericProperty(1.0)
-    zoom = NumericProperty(1);
+    zoom = NumericProperty(1)
 
     # filter states
     #####################
@@ -53,8 +52,9 @@ class Video(Widget):
     # power buttons states (on_release is power, needs implementation)
     powerState = BooleanProperty(False)
 
-    saveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
-    lastImageDir = os.path.join(saveFolder, "cover.jpg")
+    picSaveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
+    videoSaveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"recordedVideos")
+    lastImageDir = os.path.join(picSaveFolder, "cover.jpg")
 
     def __init__(self, *args, **kwargs):
         super(Video, self).__init__(*args, **kwargs)
@@ -71,7 +71,7 @@ class Video(Widget):
 
         # print(time.time())
         # display image from cam in opencv window
-        ret, frame = self.capture1.read()
+        _, frame = self.capture1.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         frame[:,:,2] = np.clip(np.rint(self.contrast * frame[:,:,2] + self.brightness), 0, 255)
         frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
@@ -141,7 +141,7 @@ class Video(Widget):
         date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
 
         # need to get current pathfrom OS to avoid issues with imwrite (note directory is found relative to scripts directory)
-        dir = os.path.join(self.saveFolder, date + ".jpg")
+        dir = os.path.join(self.picSaveFolder, date + ".jpg")
 
         # cv2.imwrite fails silently if path is incorrect
         if not cv2.imwrite(dir, frame):
@@ -221,21 +221,23 @@ class Video(Widget):
             self.ids['power'].source = "assets/images/power.png"
             self.powerState = False
 
-###########################
-# Needs implementation
-###########################
-
     def record(self):
-        if(self.recording == True):
+        if self.recording:
             self.recorder.release()
+            self.ids['recordButton'].source = "assets/images/record.png"
             self.recording = False
         else:
             self.recording = True
+            self.ids['recordButton'].source = "assets/images/stop.png"
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
+            dir = os.path.join(self.videoSaveFolder, date + ".mp4")
 
-            self.recorder = cv2.VideoWriter('recordedVideos/' + date + '.mp4',fourcc, frameRate, (1280,720))
-        print('record stream')
+            self.recorder = cv2.VideoWriter(dir, fourcc, frameRate, (1280,720))
+
+###########################
+# Needs implementation
+###########################
 
     def overlay(self):
         print('overlay')
@@ -244,6 +246,11 @@ class Video(Widget):
         print('swap cameras')
 
 class ExampleApp(App):
+
+    # acts like a static variable, ideally would be an instance variable but that
+    # causes errors with conda for some reason
+    vid = None
+
     def build(self):
         vid = Video()
         vid.capture1 = cv2.VideoCapture(0)
@@ -252,7 +259,15 @@ class ExampleApp(App):
         vid.capture1.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         # time1 = time.time()
         Clock.schedule_interval(vid.update, 1.0/8.0)
+        self.vid = vid
         return vid
+
+    # end recording session when closing application
+    def on_stop(self):
+        if self.vid.recording:
+            self.vid.recorder.release()
+            self.vid.recording = False
+
 
 if __name__ == '__main__':
     ExampleApp().run()
