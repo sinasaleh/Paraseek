@@ -21,7 +21,7 @@ import os
 import time
 import math
 
-frameRate = 30.0
+frameRate = 8.0
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -251,12 +251,10 @@ class Video(Widget):
             self.invertState = False
 
     def fullscreenStream(self):
-        print('fullscreen')
         if not self.fullscreenState:
-            self.ids['arrow'].source = "assets/images/smallscreen.png"
+            # somehow change canvas to that of a full screen stream (should this be done inside ExampleApp?)
             self.fullscreenState = True
         else:
-            self.ids['arrow'].source = "assets/images/fullscreen.png"
             self.fullscreenState = False
 
     def power(self):
