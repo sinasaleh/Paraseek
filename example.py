@@ -47,6 +47,10 @@ class Video(Widget):
     invertState = BooleanProperty(False)
     #####################
 
+    # Used in kMeans clustering
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+    nmbrClusters = 6
+
     # full screen video state (on_release is fullscreenStream, needs implementation)
     fullscreenState = BooleanProperty(False)
     # power buttons states (on_release is power, needs implementation)
@@ -95,20 +99,32 @@ class Video(Widget):
     def applyFilters(self, frame):
 
         if self.noiseState == True:
-            pass
+            # good for salt and pepper noise, Panos suggested this made the most sense
+            frame = cv2.medianBlur(frame, 7)
+
         if self.borderState == True:
             frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             frameBW = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
             frameBW = cv2.cvtColor(frameBW, cv2.COLOR_GRAY2BGR)
             frame = cv2.addWeighted(frameBW,0.5,frame,0.5,0)
+
         if self.clusterState == True:
-            pass
+            z = frame.reshape((-1,3))
+            z = np.float32(z)
+            ret, label, center = cv2.kmeans(z,self.nmbrClusters,None,self.criteria,
+            10,cv2.KMEANS_RANDOM_CENTERS)
+
+            center = np.uint8(center)
+            res = center[label.flatten()]
+            frame = res.reshape((frame.shape))
+
         if self.thresholdState == True:
             frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             frame = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+            
         if self.invertState == True:
              frame = cv2.bitwise_not(frame)
 
