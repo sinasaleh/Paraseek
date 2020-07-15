@@ -21,7 +21,7 @@ import os
 import time
 import math
 
-frameRate = 8.0
+frameRate = 30.0
 
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -61,16 +61,28 @@ class Video(Widget):
 
     picSaveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"capturedImages")
     videoSaveFolder = os.path.join(os.path.dirname(os.path.realpath(__file__)),"recordedVideos")
-    lastImageDir = os.path.join(picSaveFolder, "cover.jpg")
+    saveFileDir = os.path.join(os.path.dirname(os.path.realpath(__file__)),"bin", "lastImage.txt")
+    lastImageDir = None
 
     def __init__(self, *args, **kwargs):
         super(Video, self).__init__(*args, **kwargs)
+
         brightnessSlider = self.ids['brightnessSlider']
         brightnessSlider.fbind('value', self.onBrightnessChange)
+
         contrastSlider = self.ids['contrastSlider']
         contrastSlider.fbind('value', self.onContrastChange)
-        contrastSlider = self.ids['zoomSlider']
-        contrastSlider.fbind('value', self.onZoomChange)
+
+        zoomSlider = self.ids['zoomSlider']
+        zoomSlider.fbind('value', self.onZoomChange)
+        
+        # read directory of last save image, if image no longer exists cover image in assets folder
+        raw = open(self.saveFileDir, "r")
+        self.lastImageDir = raw.read().split("\n")[0]
+        raw.close()
+        if not os.path.exists(self.lastImageDir):
+            self.lastImageDir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets", "images", "cover.jpg")
+        self.ids['lastCapturedImage'].source = self.lastImageDir
 
 
     def update(self, dt):
@@ -181,6 +193,7 @@ class Video(Widget):
             raise Exception("Could not write image")
 
         self.lastImageDir = dir
+
 
     def displayLastImage(self):
         image = cv2.imread(self.lastImageDir)
@@ -303,6 +316,13 @@ class ExampleApp(App):
         if self.vid.recording:
             self.vid.recorder.release()
             self.vid.recording = False
+        
+        saveTextFile = open(self.vid.saveFileDir, "r+")
+        saveTextFile.read()
+        saveTextFile.seek(0)
+        saveTextFile.truncate()
+        saveTextFile.write(self.vid.lastImageDir)
+        saveTextFile.close()
 
 
 if __name__ == '__main__':
