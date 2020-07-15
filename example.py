@@ -173,6 +173,9 @@ class Video(Widget):
         # need to get current pathfrom OS to avoid issues with imwrite (note directory is found relative to scripts directory)
         dir = os.path.join(self.picSaveFolder, date + patientName + ".jpg")
 
+        # apply filters to this captured frame
+        frame = self.applyFilters(frame)
+
         # cv2.imwrite fails silently if path is incorrect
         if not cv2.imwrite(dir, frame):
             raise Exception("Could not write image")
