@@ -139,9 +139,11 @@ class Video(Widget):
 
         # Save the captured image
         date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
+        patientName = "-" + self.ids['nameTextBox'].text.strip().replace(" ", "-")
+        if patientName == "-": patientName = ""
 
         # need to get current pathfrom OS to avoid issues with imwrite (note directory is found relative to scripts directory)
-        dir = os.path.join(self.picSaveFolder, date + ".jpg")
+        dir = os.path.join(self.picSaveFolder, date + patientName + ".jpg")
 
         # cv2.imwrite fails silently if path is incorrect
         if not cv2.imwrite(dir, frame):
@@ -229,10 +231,13 @@ class Video(Widget):
         else:
             self.recording = True
             self.ids['recordButton'].source = "assets/images/stop.png"
-            fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
-            dir = os.path.join(self.videoSaveFolder, date + ".mp4")
 
+            date = datetime.datetime.now().strftime("%d-%b-%Y-%H-%M-%S-%f")
+            patientName = "-" + self.ids['nameTextBox'].text.strip().replace(" ", "-")
+            if patientName == "-": patientName = ""
+            dir = os.path.join(self.videoSaveFolder, date + patientName + ".mp4")
+
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
             self.recorder = cv2.VideoWriter(dir, fourcc, frameRate, (1280,720))
 
 ###########################
