@@ -19,6 +19,7 @@ import numpy as np
 import datetime
 import os
 import time
+import math
 
 frameRate = 8.0
 
@@ -49,7 +50,9 @@ class Video(Widget):
 
     # Used in kMeans clustering
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-    nmbrClusters = 6
+    nmbrClusters = 5
+    # by what factor is the center rectangle that is clustered smaller from the image in size 
+    cntrRecSzFac = math.sqrt(9.0)
 
     # full screen video state (on_release is fullscreenStream, needs implementation)
     fullscreenState = BooleanProperty(False)
@@ -110,21 +113,30 @@ class Video(Widget):
             frame = cv2.addWeighted(frameBW,0.5,frame,0.5,0)
 
         if self.clusterState == True:
-            z = frame.reshape((-1,3))
+            height,width,_ = frame.shape
+            recSize = (math.ceil(width/self.cntrRecSzFac), math.ceil(height/self.cntrRecSzFac))
+            startPoint = (math.ceil((width - recSize[0])/2.0), math.ceil((height - recSize[1])/2.0))
+            endPoint = (startPoint[0] + recSize[0], startPoint[1] + recSize[1])
+            centerRec = np.zeros(recSize, np.uint8)
+            centerRec = frame[startPoint[1]:endPoint[1],startPoint[0]:endPoint[0]]
+
+            z = centerRec.reshape((-1,3))
             z = np.float32(z)
             ret, label, center = cv2.kmeans(z,self.nmbrClusters,None,self.criteria,
             10,cv2.KMEANS_RANDOM_CENTERS)
 
             center = np.uint8(center)
             res = center[label.flatten()]
-            frame = res.reshape((frame.shape))
+            centerRec = res.reshape((centerRec.shape))
+
+            frame[startPoint[1]:endPoint[1],startPoint[0]:endPoint[0]] = centerRec
 
         if self.thresholdState == True:
             frameBW = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             frame = cv2.adaptiveThreshold(frameBW,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
             frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
-            
+
         if self.invertState == True:
              frame = cv2.bitwise_not(frame)
 
