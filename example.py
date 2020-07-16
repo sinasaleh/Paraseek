@@ -14,6 +14,12 @@ from kivy.config import Config
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.uix.textinput import TextInput
 
+###################################
+# For Hovering
+from kivy.core.window import Window
+# For Hovering
+###################################
+
 import cv2
 import numpy as np
 import datetime
@@ -23,8 +29,51 @@ import math
 
 frameRate = 8.0
 
+###################################
+# For Hovering
+# Just need to add hover specific image of the ImageButton to the assets/hover folder.
+# NOTE  images must have same name in the assets/hover and assets/images folders
 class ImageButton(ButtonBehavior, Image):
-    pass
+    hovered = BooleanProperty(False)
+    border_point= ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        self.register_event_type('on_enter')
+        self.register_event_type('on_leave')
+        Window.bind(mouse_pos=self.on_mouse_pos)
+        super(ImageButton, self).__init__(**kwargs)
+
+    def on_mouse_pos(self, *args):
+        if not self.get_root_window():
+            return # do proceed if I'm not displayed <=> If have no parent
+        pos = args[1]
+        # Next line to_widget allow to compensate for relative layout
+        inside = self.collide_point(*self.to_widget(*pos))
+        if self.hovered == inside:
+            # We have already done what was needed
+            return
+        self.border_point = pos
+        self.hovered = inside
+        if inside:
+            self.dispatch('on_enter')
+        else:
+            self.dispatch('on_leave')
+
+    def on_enter(self):
+        if "capturedImages" in self.source:
+            with self.canvas:
+                self.opacity = 0.7
+        elif "hover" not in self.source:
+            self.source = self.source.replace("images", "hover")
+
+
+    def on_leave(self):
+        if "capturedImages" in self.source:
+            with self.canvas:
+                self.opacity = 1.0
+        elif "hover" in self.source:
+            self.source = self.source.replace("hover", "images")
+
 
 class Video(Widget):
     # To be used for the first camera
@@ -307,6 +356,7 @@ class ExampleApp(App):
         # time1 = time.time()
         Clock.schedule_interval(vid.update, 1.0/8.0)
         self.vid = vid
+
         return vid
 
     # end recording session when closing application
