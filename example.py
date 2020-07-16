@@ -27,7 +27,7 @@ import os
 import time
 import math
 
-frameRate = 8.0
+frameRate = 15
 
 ###################################
 # For Hovering
@@ -100,7 +100,7 @@ class Video(Widget):
     # Used in kMeans clustering
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
     nmbrClusters = 5
-    # by what factor is the center rectangle that is clustered smaller from the image in size 
+    # by what factor is the center rectangle that is clustered smaller from the image in size
     cntrRecSzFac = math.sqrt(9.0)
 
     # full screen video state (on_release is fullscreenStream, needs implementation)
@@ -124,7 +124,7 @@ class Video(Widget):
 
         zoomSlider = self.ids['zoomSlider']
         zoomSlider.fbind('value', self.onZoomChange)
-        
+
         # read directory of last save image, if image no longer exists cover image in assets folder
         raw = open(self.saveFileDir, "r")
         self.lastImageDir = raw.read().split("\n")[0]
@@ -151,7 +151,7 @@ class Video(Widget):
 
         if(self.zoom > 1):
             frame = self.zoomFrame(frame)
-            
+
         buf1 = cv2.flip(frame, 0)
         buf = buf1.tobytes()
         texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
@@ -354,7 +354,7 @@ class ExampleApp(App):
         vid.capture1.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         vid.capture1.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         # time1 = time.time()
-        Clock.schedule_interval(vid.update, 1.0/8.0)
+        Clock.schedule_interval(vid.update, 1.0/frameRate)
         self.vid = vid
 
         return vid
@@ -364,7 +364,7 @@ class ExampleApp(App):
         if self.vid.recording:
             self.vid.recorder.release()
             self.vid.recording = False
-        
+
         saveTextFile = open(self.vid.saveFileDir, "r+")
         saveTextFile.read()
         saveTextFile.seek(0)
